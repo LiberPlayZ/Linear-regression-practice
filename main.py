@@ -2,6 +2,7 @@ import pymongo
 from pymongo import MongoClient
 import math
 
+
 cluster = MongoClient("mongodb+srv://dandosh5090:tru123QR@cluster0.vjtclwm.mongodb.net/?retryWrites=true&w=majority")
 db = cluster['test']  # connect to db
 Variable_collection = db['test']  # connect to collection
@@ -18,6 +19,7 @@ def isInteger(x):  # the function if x is integer
         int(x)
         return True
     except ValueError:
+        print(ValueError.__name__)
         return False
 
 
@@ -51,20 +53,49 @@ def Linear_relationship(r, x_name, y_name):  # The function returns a conclusion
         print(f"There is a perfect and {sign} relationship between {x_name} and a {y_name}")
 
 
-def add_new_variable_to_db():
-    pass
+def add_new_variable_to_db():  # the function add new object to db that include 2 topic with same amount of data .
+    currentId = Variable_collection.find_one({"_id": 0})
+    num_of_elements = input("enter the amount of data for x and y variables : ")
+    while not isInteger(num_of_elements):
+        num_of_elements = input("enter the amount of data for x and y variables : ")
+
+    X_name = input("enter the name of the first topic :   ")
+    Y_name = input("enter the name of the second topic :   ")
+
+    x_variables = []
+    y_variables = []
+    curX, curY = '', ''
+
+    for i in range(int(num_of_elements)):
+        curX = input(f"enter value for x{i + 1} : ")
+        curY = input(f"enter value for y{i + 1} : ")
+        while not isInteger(curX) or not isInteger(curY):
+            curX = input(f"enter value for x{i + 1} : ")
+            curY = input(f"enter value for y{i + 1} : ")
+        x_variables.append(int(curX))
+        y_variables.append(int(curY))
+
+    Variable_collection.insert_one(
+        {"_id": currentId['value'] + 1, "X_Name": X_name, "X_Variables": x_variables, "Y_Name": Y_name,
+         "Y_Variables": y_variables, "Num_Of_Elements": int(num_of_elements)})
+    Variable_collection.update_one({"_id": 0}, {"$inc": {"value": 1}})
 
 
 def view_variables_in_db():
-    pass
+    variables = Variable_collection.find({})
+    for variable in variables:
+        if variable['_id'] > 0:
+            for key, value in variable.items():
+                print(f"\033[31m{key}\033[0m : {value}")
+            print("")
 
 
 def main():
-    print(
-        "Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression ")
+    # print(
+    #     "Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression ")
     while True:
         command = input(
-            'Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression')
+            'Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression : ').lower()
         if command == 'add':
             add_new_variable_to_db()
         elif command == 'view':
@@ -75,3 +106,6 @@ def main():
 
         else:
             exit()
+
+
+main()
