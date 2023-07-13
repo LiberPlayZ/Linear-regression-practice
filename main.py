@@ -92,13 +92,6 @@ def view_variables_in_db():  # the function print all the items in Variable coll
             print("")
 
 
-def getBinary(id):
-    with open(f'graph{id}', 'rb') as f:
-        image_data = f.read()
-    # create a binary representation of the image
-    binary_image = pymongo.Binary(image_data)
-    print(binary_image)
-
 
 def Creating_Regression_Line(Var_In_Db, correlation_coefficient):
     slope_Bx = round((correlation_coefficient * Standard_deviation(Var_In_Db['Y_Variables'])) / Standard_deviation(
