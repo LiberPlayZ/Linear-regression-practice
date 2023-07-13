@@ -2,7 +2,6 @@ import pymongo
 from pymongo import MongoClient
 import math
 
-
 cluster = MongoClient("mongodb+srv://dandosh5090:tru123QR@cluster0.vjtclwm.mongodb.net/?retryWrites=true&w=majority")
 db = cluster['test']  # connect to db
 Variable_collection = db['test']  # connect to collection
@@ -40,17 +39,16 @@ def Correlation_coefficient(array1, array2):  # the func calculate the r of x an
 
 def Linear_relationship(r, x_name, y_name):  # The function returns a conclusion about the correlation coefficient.
     if r == 0:
-        print(f"There is not a connection between {x_name} and {y_name}")
-        return
+        return f"There is not a connection between {x_name} and {y_name}"
     sign = 'Positive' if r > 0 else 'Negative'
     if abs(r) < 0.3:
-        print(f"There is a weak and {sign} relationship between {x_name} and a {y_name}")
+        return f"There is a weak and {sign} relationship between {x_name} and  {y_name}"
     elif 0.3 < abs(r) < 0.7:
-        print(f"There is a moderate and {sign} relationship between {x_name} and a {y_name}")
+        return f"There is a moderate and {sign} relationship between {x_name} and  {y_name}"
     elif 0.7 < abs(r) < 1:
-        print(f"There is a strong and {sign} relationship between {x_name} and a {y_name}")
+        return f"There is a strong and {sign} relationship between {x_name} and  {y_name}"
     else:
-        print(f"There is a perfect and {sign} relationship between {x_name} and a {y_name}")
+        return f"There is a perfect and {sign} relationship between {x_name} and  {y_name}"
 
 
 def add_new_variable_to_db():  # the function add new object to db that include 2 topic with same amount of data .
@@ -81,13 +79,34 @@ def add_new_variable_to_db():  # the function add new object to db that include 
     Variable_collection.update_one({"_id": 0}, {"$inc": {"value": 1}})
 
 
-def view_variables_in_db():
+def view_variables_in_db():  # the function print all the items in Variable collection
     variables = Variable_collection.find({})
     for variable in variables:
         if variable['_id'] > 0:
             for key, value in variable.items():
                 print(f"\033[31m{key}\033[0m : {value}")
             print("")
+
+
+def Linear_Regression():
+    Id = input(
+        "enter the id of the variable in the db you want to calculate Linear Regression (use |view| command)  : ")
+    while not isInteger(Id):
+        Id = input(
+            "enter the id of the variable in the db you want to calculate Linear Regression (use |view| command) : ")
+    while True:
+        if Result_connection.find_one({"_id": int(Id)}) is not None:
+            result = Result_connection.find_one({"_id": int(Id)})
+            for key, value in result.items():
+                print(f"\033[31m{key}\033[0m : {value}")
+            print("")
+            break
+        else:
+            result = Variable_collection.find_one({"_id": int(Id)})
+            correlation_coefficient = round(Correlation_coefficient(result['X_Variables'], result['Y_Variables']), 4)
+            linear_connection = Linear_relationship(correlation_coefficient, result['X_Name'], result['Y_Name'])
+            Result_connection.insert_one({"_id": int(Id), "correlation_coefficient": correlation_coefficient,
+                                          "linear_connection": linear_connection})
 
 
 def main():
@@ -101,9 +120,7 @@ def main():
         elif command == 'view':
             view_variables_in_db()
         elif command == 'calculate':
-            # func()
-            continue
-
+            Linear_Regression()
         else:
             exit()
 
