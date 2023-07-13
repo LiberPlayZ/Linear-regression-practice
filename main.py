@@ -1,6 +1,10 @@
 import pymongo
 from pymongo import MongoClient
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+import io
 
 cluster = MongoClient("mongodb+srv://dandosh5090:tru123QR@cluster0.vjtclwm.mongodb.net/?retryWrites=true&w=majority")
 db = cluster['test']  # connect to db
@@ -88,6 +92,39 @@ def view_variables_in_db():  # the function print all the items in Variable coll
             print("")
 
 
+def getBinary(id):
+    with open(f'graph{id}', 'rb') as f:
+        image_data = f.read()
+    # create a binary representation of the image
+    binary_image = pymongo.Binary(image_data)
+    print(binary_image)
+
+
+def Creating_Regression_Line(Var_In_Db, correlation_coefficient):
+    slope_Bx = round((correlation_coefficient * Standard_deviation(Var_In_Db['Y_Variables'])) / Standard_deviation(
+        Var_In_Db['X_Variables']), 4)
+    intercept_A = round(sum(Var_In_Db['Y_Variables']) / Var_In_Db['Num_Of_Elements'] - (
+            slope_Bx * (sum(Var_In_Db['X_Variables']) / Var_In_Db['Num_Of_Elements'])), 4)
+
+    # creating the graph
+    x = np.linspace(0, max(Var_In_Db['X_Variables']), 100)
+    y = slope_Bx * x + intercept_A
+    fig, ax = plt.subplots()
+
+    ax.plot(x, y, label=f'regression line | Bx = {slope_Bx} , A = {intercept_A}')
+    ax.scatter(Var_In_Db['X_Variables'], Var_In_Db['Y_Variables'], color='red', label='Data ')
+    ax.set_xlabel(Var_In_Db['X_Name'])
+    ax.set_ylabel(Var_In_Db['Y_Name'])
+    ax.set_title(f'Regression Line between {Var_In_Db["X_Name"]} and {Var_In_Db["Y_Name"]} ')
+    ax.legend()
+    buffer = io.BytesIO()
+    # plt.savefig(f'graph{Var_In_Db["_id"]}.png')
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_data = buffer.getvalue()
+    return image_data
+
+
 def Linear_Regression():
     Id = input(
         "enter the id of the variable in the db you want to calculate Linear Regression (use |view| command)  : ")
@@ -98,15 +135,21 @@ def Linear_Regression():
         if Result_connection.find_one({"_id": int(Id)}) is not None:
             result = Result_connection.find_one({"_id": int(Id)})
             for key, value in result.items():
-                print(f"\033[31m{key}\033[0m : {value}")
+                if key != 'graph data':
+                    print(f"\033[31m{key}\033[0m : {value}")
+                else:
+                    image_stream = io.BytesIO(value)
+                    image = Image.open(image_stream)
+                    image.show()
             print("")
             break
         else:
             result = Variable_collection.find_one({"_id": int(Id)})
             correlation_coefficient = round(Correlation_coefficient(result['X_Variables'], result['Y_Variables']), 4)
             linear_connection = Linear_relationship(correlation_coefficient, result['X_Name'], result['Y_Name'])
+            graph_data = Creating_Regression_Line(result, correlation_coefficient)
             Result_connection.insert_one({"_id": int(Id), "correlation_coefficient": correlation_coefficient,
-                                          "linear_connection": linear_connection})
+                                          "linear_connection": linear_connection, "graph data": graph_data})
 
 
 def main():
@@ -114,7 +157,7 @@ def main():
     #     "Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression ")
     while True:
         command = input(
-            'Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression : ').lower()
+            'Welcome , press |add| to add new variable , |view| to show all variable in db , |calculate| for Linear regression and graph : ').lower()
         if command == 'add':
             add_new_variable_to_db()
         elif command == 'view':
@@ -122,6 +165,7 @@ def main():
         elif command == 'calculate':
             Linear_Regression()
         else:
+            cluster.close()
             exit()
 
 
