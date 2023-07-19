@@ -1,6 +1,5 @@
 import math
-
-
+from Utilities.draw_Graph import creating_Regression_Line_Graph_With_Marked_Points
 
 
 def Standard_deviation(array):  # the func calculate the standard deviation of x/y
@@ -58,6 +57,7 @@ class Linear_regresiion_object:
         self.intercept = None
         self.prediction_percentage = None
         self.linear_Connection = None
+        self.graph_data = None
         self.create_Linear_Regression_Object(X_Array, Y_Array, X_name, Y_Name)
 
     def create_Linear_Regression_Object(self, X_Array, Y_Array, X_name, Y_name):
@@ -66,7 +66,8 @@ class Linear_regresiion_object:
                                                                           Y_Array)
         self.linear_Connection = Linear_relationship(self.correlation_coefficient, X_name, Y_name)
         self.prediction_percentage = round(((abs(self.correlation_coefficient)) ** 2) * 100, 4)
-
+        self.graph_data = creating_Regression_Line_Graph_With_Marked_Points(X_Array, Y_Array, X_name, Y_name,
+                                                                            self.slope, self.intercept)
 
 # def main():
 #     r = Linear_regresiion_object([18, 20, 22, 24, 26, 28], [12, 14, 16, 18, 20, 22])

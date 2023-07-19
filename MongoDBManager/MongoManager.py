@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from MongoDBManager.Research import Research
 from Utilities.Tools import *
 from Utilities.Linear_Regression import *
-from Utilities.draw_Graph import Creating_Regression_Line_Graph
 
 
 class MongoDBManager:
@@ -71,7 +70,8 @@ class MongoDBManager:
             collection = self.get_Collection(collection_name)
             return collection.find({})
 
-    def add_Research_Data_To_Db(self, collection_name, Id):  # the func adding data to exist research and update all relevant data im db
+    def add_Research_Data_To_Db(self, collection_name,
+                                Id):  # the func adding data to exist research and update all relevant data im db
         if self.find_In_Collection_By_Id(collection_name, Id) is not None:
             collection = self.get_Collection(collection_name)
             document = self.find_In_Collection_By_Id(collection_name, Id)
@@ -80,15 +80,13 @@ class MongoDBManager:
             num_of_elements = len(document["X_Variables"])
             Linear_Object = Linear_regresiion_object(document["X_Variables"], document["Y_Variables"],
                                                      document["X_Name"], document["Y_Name"])
-            graph_data=Creating_Regression_Line_Graph(document["X_Variables"], document["Y_Variables"],
-                                                      document["X_Name"], document["Y_Name"])
             collection.update_one({"_id": Id}, {
                 "$set": {"X_Variables": document["X_Variables"], "Y_Variables": document["Y_Variables"],
                          "num_of_elements": num_of_elements,
                          "correlation_coefficient": Linear_Object.correlation_coefficient,
                          "linear_connection": Linear_Object.linear_Connection,
                          "prediction_percentage": Linear_Object.prediction_percentage,
-                         "graph_data": graph_data}})
+                         "graph_data": Linear_Object.graph_data}})
             return
 
     def close_connection(self):

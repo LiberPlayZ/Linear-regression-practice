@@ -1,7 +1,5 @@
 from Utilities import Tools as tools
 from Utilities.Linear_Regression import *
-from Utilities import draw_Graph
-from Utilities.draw_Graph import Creating_Regression_Line_Graph
 
 
 class Research:
@@ -23,7 +21,7 @@ class Research:
         Linear_object = Linear_regresiion_object(self.X_Variables, self.Y_Variables, self.X_Name, self.Y_Name)
         self.correlation_coefficient, self.linear_connection = Linear_object.correlation_coefficient, Linear_object.linear_Connection
         self.prediction_percentage = Linear_object.prediction_percentage
-        self.graph_data = Creating_Regression_Line_Graph(self.X_Variables, self.Y_Variables, self.X_Name, self.Y_Name)
+        self.graph_data = Linear_object.graph_data
 
     def create_Research(self):
         X_name = input("enter the name of the first topic :   ")

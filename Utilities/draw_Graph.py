@@ -4,19 +4,16 @@ import textwrap
 import numpy as np
 from matplotlib import pyplot as plt
 
-from Utilities.Linear_Regression import *
 
-
-def Creating_Regression_Line_Graph(X_Array, Y_Array, X_Name, Y_name):
-    slope_Bx, intercept_A = regression_line_Y_as_a_function_of_X(Correlation_coefficient(X_Array, Y_Array), X_Array,
-                                                                 Y_Array)
+def creating_Regression_Line_Graph_With_Marked_Points(X_Array, Y_Array, X_Name, Y_name, slope,
+                                                      intercept):  # the func create linear graph image with marked points from x array and y aray
 
     # creating the graph
     x = np.linspace(0, max(X_Array), 100)
-    y = slope_Bx * x + intercept_A
+    y = slope * x + intercept
     fig, ax = plt.subplots()
 
-    ax.plot(x, y, label=f'regression line | Bx = {slope_Bx} , A = {intercept_A}')
+    ax.plot(x, y, label=f'|Bx = {slope} , A = {intercept}')
     ax.scatter(X_Array, Y_Array, color='red', label='Data ')
     ax.set_xlabel(X_Name)
     ax.set_ylabel(Y_name)
