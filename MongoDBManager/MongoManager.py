@@ -78,7 +78,7 @@ class MongoDBManager:
             document["X_Variables"], document["Y_Variables"] = add_To_double_arrays(document["X_Variables"],
                                                                                     document["Y_Variables"])
             num_of_elements = len(document["X_Variables"])
-            Linear_Object = Linear_regresiion_object(document["X_Variables"], document["Y_Variables"],
+            Linear_Object = Linear_regression_object(document["X_Variables"], document["Y_Variables"],
                                                      document["X_Name"], document["Y_Name"])
             collection.update_one({"_id": Id}, {
                 "$set": {"X_Variables": document["X_Variables"], "Y_Variables": document["Y_Variables"],

@@ -12,11 +12,16 @@ def isInteger(x):  # the function if x is integer
         return False
 
 
-def open_byte_as_image(data):
+def open_byte_as_image(data): # the func take image byte code and show the image as png file.
     image_stream = io.BytesIO(data)
     image = Image.open(image_stream)
     image.show()
 
+def only_integer_input(message): #the func gets message to show and  input only integer.
+    Id = input(message)
+    while not isInteger(Id):
+        Id = input(message)
+    return int(Id)
 
 def print_Research_From_Db(document, graph_flag):
     for key, value in document.items():

@@ -18,11 +18,8 @@ def view_variables_in_db():  # the function print all the items in Variable coll
 
 
 def show_Linear_Regression():
-    Id = input(
-        "enter the id of the variable in the db you want to calculate Linear Regression (use |view| command)  : ")
-    while not isInteger(Id):
-        Id = input(
-            "enter the id of the variable in the db you want to calculate Linear Regression (use |view| command) : ")
+    Id = only_integer_input(
+        'enter the id of the variable in the db you want to calculate Linear Regression (use |view| command)  :')
     if cluster.find_In_Collection_By_Id("Research", int(Id)) is None:
         print(
             " \033[31mThere is no  _id in the database, press|view| to see the variables or |add| to add new variable\033[0m .\n ")
@@ -32,12 +29,8 @@ def show_Linear_Regression():
         print_Research_From_Db(result, True)
 
 
-def add_Data_To_Research():
-    Id = input(
-        "enter the id of the variable in the db you want to add data(use |view| command)  : ")
-    while not isInteger(Id):
-        Id = input(
-            "enter the id of the variable in the db you want to add data(use |view| command)  : ")
+def add_Data_To_Research():  # the func add new data to exist research and changing all relevant information.
+    Id = only_integer_input('enter the id of the variable in the db you want to add data(use |view| command)  :')
     if cluster.find_In_Collection_By_Id("Research", int(Id)) is None:
         print(
             " \033[31mThere is no  _id in the database, press|view| to see the variables or |add| to add new variable\033[0m .\n ")

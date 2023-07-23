@@ -50,7 +50,7 @@ def Linear_relationship(r, x_name, y_name):  # The function returns a conclusion
         return f"There is a perfect and {sign} relationship between {x_name} and  {y_name}"
 
 
-class Linear_regresiion_object:
+class Linear_regression_object:
     def __init__(self, X_Array, Y_Array, X_name, Y_Name):
         self.correlation_coefficient = None
         self.slope = None
