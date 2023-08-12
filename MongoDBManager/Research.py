@@ -1,4 +1,4 @@
-from Utilities import Tools as tools
+from Utilities.Backend_Tools import create_double_arrays
 from Utilities.Linear_Regression import *
 
 
@@ -28,7 +28,7 @@ class Research:
         Y_name = input("enter the name of the second topic :   ")
         x_variables = []
         y_variables = []
-        x_variables, y_variables = tools.create_double_arrays()
+        x_variables, y_variables = create_double_arrays()
 
         self.X_Name = X_name
         self.X_Variables = x_variables
