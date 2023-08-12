@@ -1,8 +1,3 @@
-import io
-
-from PIL import Image
-
-
 def isInteger(x):  # the function if x is integer
     try:
         int(x)
@@ -10,24 +5,6 @@ def isInteger(x):  # the function if x is integer
     except ValueError:
         print(ValueError.__name__)
         return False
-
-
-def open_byte_as_image(data):
-    image_stream = io.BytesIO(data)
-    image = Image.open(image_stream)
-    image.show()
-
-
-def print_Research_From_Db(document, graph_flag):
-    for key, value in document.items():
-        if key == 'graph_data' or key == 'prediction_percentage':
-            if key == 'graph_data' and graph_flag is True:
-                open_byte_as_image(value)
-            if key == 'prediction_percentage':
-                print(f"\033[31m{key}\033[0m : {value} %")
-        else:
-            print(f"\033[31m{key}\033[0m : {value}")
-    print("")
 
 
 def create_double_arrays():  # the func create 2 arrays of data in same length

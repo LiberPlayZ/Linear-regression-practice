@@ -1,7 +1,10 @@
 from pymongo import MongoClient
+
+import environment_variables
 from MongoDBManager.Research import Research
-from Utilities.Tools import *
+from Utilities.Backend_Tools import *
 from Utilities.Linear_Regression import *
+import environment_variables as EV
 
 
 class MongoDBManager:
@@ -20,7 +23,7 @@ class MongoDBManager:
             raise Exception("This class is a Singleton! Use get_instance() to get the instance.")
         else:
             MongoDBManager.__instance = self
-            self.client = MongoClient("mongodb://localhost:27017")
+            self.client = MongoClient(EV.Client_Url)
             self.db = self.client[database_name]
 
     def find_In_Collection(self, collection_name, query):
@@ -78,7 +81,7 @@ class MongoDBManager:
             document["X_Variables"], document["Y_Variables"] = add_To_double_arrays(document["X_Variables"],
                                                                                     document["Y_Variables"])
             num_of_elements = len(document["X_Variables"])
-            Linear_Object = Linear_regresiion_object(document["X_Variables"], document["Y_Variables"],
+            Linear_Object = Linear_regression_object(document["X_Variables"], document["Y_Variables"],
                                                      document["X_Name"], document["Y_Name"])
             collection.update_one({"_id": Id}, {
                 "$set": {"X_Variables": document["X_Variables"], "Y_Variables": document["Y_Variables"],

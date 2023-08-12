@@ -1,4 +1,4 @@
-from Utilities import Tools as tools
+from Utilities.Backend_Tools import create_double_arrays
 from Utilities.Linear_Regression import *
 
 
@@ -18,7 +18,7 @@ class Research:
         self.create_Linear_Regression()
 
     def create_Linear_Regression(self):
-        Linear_object = Linear_regresiion_object(self.X_Variables, self.Y_Variables, self.X_Name, self.Y_Name)
+        Linear_object = Linear_regression_object(self.X_Variables, self.Y_Variables, self.X_Name, self.Y_Name)
         self.correlation_coefficient, self.linear_connection = Linear_object.correlation_coefficient, Linear_object.linear_Connection
         self.prediction_percentage = Linear_object.prediction_percentage
         self.graph_data = Linear_object.graph_data
@@ -28,7 +28,7 @@ class Research:
         Y_name = input("enter the name of the second topic :   ")
         x_variables = []
         y_variables = []
-        x_variables, y_variables = tools.create_double_arrays()
+        x_variables, y_variables = create_double_arrays()
 
         self.X_Name = X_name
         self.X_Variables = x_variables

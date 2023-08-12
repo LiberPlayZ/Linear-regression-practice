@@ -13,7 +13,7 @@ def creating_Regression_Line_Graph_With_Marked_Points(X_Array, Y_Array, X_Name, 
     y = slope * x + intercept
     fig, ax = plt.subplots()
 
-    ax.plot(x, y, label=f'|Bx = {slope} , A = {intercept}')
+    ax.plot(x, y, label=f'Bx = {slope} , A = {intercept}')
     ax.scatter(X_Array, Y_Array, color='red', label='Data ')
     ax.set_xlabel(X_Name)
     ax.set_ylabel(Y_name)
