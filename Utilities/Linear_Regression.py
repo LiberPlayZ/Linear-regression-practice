@@ -15,24 +15,24 @@ def Common_variance(array1, array2):  # the func calculate the common variance o
 
 
 def Correlation_coefficient(array1, array2):  # the func calculate the r of x and y using all the function
-    return round(Common_variance(array1, array2) / (Standard_deviation(array1) * Standard_deviation(array2)), 4)
+    return Common_variance(array1, array2) / (Standard_deviation(array1) * Standard_deviation(array2))
 
 
 def regression_line_Y_as_a_function_of_X(correlation_coefficient, X_Array,
                                          Y_Array):  # Regression line for predicting Y as a function of X:
-    slope_Bx = round((correlation_coefficient * Standard_deviation(Y_Array)) / Standard_deviation(
-        X_Array), 4)
-    intercept_A = round((sum(Y_Array)) / (len(Y_Array)) - (
-            slope_Bx * ((sum(X_Array)) / (len(X_Array)))), 4)
+    slope_Bx = (correlation_coefficient * Standard_deviation(Y_Array)) / Standard_deviation(
+        X_Array)
+    intercept_A = (sum(Y_Array)) / (len(Y_Array)) - (
+            slope_Bx * ((sum(X_Array)) / (len(X_Array))))
     return slope_Bx, intercept_A
 
 
 def regression_line_X_as_a_function_of_Y(correlation_coefficient, X_Array,
                                          Y_Array):  # Regression line for predicting X as a function of Y:
-    slope_By = round((correlation_coefficient * Standard_deviation(X_Array)) / Standard_deviation(
-        Y_Array), 4)
-    intercept_A = round((sum(X_Array)) / (len(X_Array)) - (
-            slope_By * ((sum(Y_Array)) / (len(Y_Array)))), 4)
+    slope_By = (correlation_coefficient * Standard_deviation(X_Array)) / Standard_deviation(
+        Y_Array)
+    intercept_A = (sum(X_Array)) / (len(X_Array)) - (
+            slope_By * ((sum(Y_Array)) / (len(Y_Array))))
     return slope_By, intercept_A
 
 
@@ -51,23 +51,27 @@ def Linear_relationship(r, x_name, y_name):  # The function returns a conclusion
 
 
 class Linear_regression_object:
-    def __init__(self, X_Array, Y_Array, X_name, Y_Name):
+
+    def __init__(self, X_Array, Y_Array, X_name=None, Y_Name=None):
         self.correlation_coefficient = None
         self.slope = None
         self.intercept = None
         self.prediction_percentage = None
         self.linear_Connection = None
         self.graph_data = None
-        self.create_Linear_Regression_Object(X_Array, Y_Array, X_name, Y_Name)
+        self.create_Linear_Regression_Object_With_Graph(X_Array, Y_Array, X_name, Y_Name)
 
-    def create_Linear_Regression_Object(self, X_Array, Y_Array, X_name, Y_name):
+    def create_Linear_Regression_Object_With_Graph(self, X_Array, Y_Array, X_name, Y_name):
         self.correlation_coefficient = Correlation_coefficient(X_Array, Y_Array)
         self.slope, self.intercept = regression_line_Y_as_a_function_of_X(self.correlation_coefficient, X_Array,
                                                                           Y_Array)
-        self.linear_Connection = Linear_relationship(self.correlation_coefficient, X_name, Y_name)
-        self.prediction_percentage = round(((abs(self.correlation_coefficient)) ** 2) * 100, 4)
-        self.graph_data = creating_Regression_Line_Graph_With_Marked_Points(X_Array, Y_Array, X_name, Y_name,
-                                                                            self.slope, self.intercept)
+
+        self.prediction_percentage = ((abs(self.correlation_coefficient)) ** 2) * 100
+        if X_name is not None or Y_name is not None:
+            self.linear_Connection = Linear_relationship(self.correlation_coefficient, X_name, Y_name)
+            self.graph_data = creating_Regression_Line_Graph_With_Marked_Points(X_Array, Y_Array, X_name, Y_name,
+                                                                                self.slope, self.intercept)
+
 
 # def main():
 #     r = Linear_regresiion_object([18, 20, 22, 24, 26, 28], [12, 14, 16, 18, 20, 22])
