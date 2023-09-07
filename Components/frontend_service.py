@@ -12,14 +12,18 @@ class Service:
         self.cluster = MgDb.MongoDBManager.get_instance(EV.Database_Name)
         self.collection_name = EV.Collection_Name
 
-    def create_Model_For_Front(self, graph_Id):
+    def create_graph_model_for_front(self, graph_Id):  # create graph model for frontend
         front_Model = None
+        table_points_model = None
         if self.cluster.find_In_Collection_By_Id(self.collection_name, int(graph_Id)) is not None:
             result = self.cluster.find_In_Collection_By_Id(self.collection_name, int(graph_Id))
-            keys_to_extract = ['correlation_coefficient', 'prediction_percentage', 'graph_data']
+            keys_to_extract = ['graph_data', 'correlation_coefficient']
             front_Model = {key: result[key] for key in keys_to_extract}
             base64_image = base64.b64encode(result["graph_data"]).decode('utf-8')
             front_Model['graph_data'] = base64_image
+            table_points_model = dict(X_name=result['X_Name'], X_array=result['X_Variables'],
+                                      Y_name=result['Y_Name'], Y_array=result['Y_Variables'])
+            front_Model['points_model'] = table_points_model
         else:
             front_Model = {'correlation_coefficient': -2, 'prediction_percentage': -2, 'graph_data': 'error'}
         return front_Model
@@ -36,10 +40,10 @@ class Service:
                 dataList.append(current_item)
         return dataList
 
+def main():
+    ser = Service()
+    ser.sendListForTable()
+    print(ser.create_graph_model_for_front(1))
 
-# def main():
-#     ser = Service()
-#     ser.sendListForTable()
-#
-#
-# main()
+
+main()

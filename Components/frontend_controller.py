@@ -16,7 +16,7 @@ def receiveGraphId():
     ReceiveGraphId = int(request.args.get("imageId"))
     print(type(ReceiveGraphId))
     response = {"message": "data received "}
-    Model = service.create_Model_For_Front(ReceiveGraphId)
+    Model = service.create_graph_model_for_front(ReceiveGraphId)
     print(Model)
     return jsonify(Model)
 
